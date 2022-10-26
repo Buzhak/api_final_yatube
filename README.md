@@ -45,7 +45,7 @@ python3 manage.py migrate
 python3 manage.py runserver
 ```
 
-### Примеры запросов для работы с API
+## Примеры запросов для работы с API
 
 Когда вы запустите проект, по [адресу](http://127.0.0.1:8000/redoc/) будет доступна документация для API Yatube.
 
@@ -83,6 +83,6 @@ python3 manage.py runserver
     "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3MjQwNjMzLCJqdGkiOiI2MjkzNDJmMDAyZmE0N2I1ODVmMTA3MGI2MWUwYjkwNiIsInVzZXJfaWQiOjR9.uTOIERYUjeRRBIARUKcj32pYpN-lwE7SIiiJ-bRzvP0"
 }
 ```
-Токен вернётся в поле $\colorbox{blue}{access}$, а данные из поля refresh пригодятся для обновления токена.
+Токен вернётся в поле "access", а данные из поля "refresh" пригодятся для обновления токена.
 
 Если ваш токен утрачен, украден или каким-то иным образом скомпрометирован, вам понадобится отключить его и получить новый. Для этого отправьте POST-запрос на тот же адрес [http://127.0.0.1:8000/api/v1/jwt/create/](http://127.0.0.1:8000/api/v1/jwt/create/), а в теле запроса в поле refresh передайте refresh-токен.
