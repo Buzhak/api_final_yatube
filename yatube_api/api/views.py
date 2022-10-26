@@ -10,11 +10,15 @@ from .serializers import (
     GroupSerializer,
     PostSerializer
 )
+
 from posts.models import Comment, Follow, Group, Post, User
+from yatube_api.settings import PAGE_SIZE
+
+E_MESSAGE = 'Изменение чужого контента запрещено!'
 
 
 class PostsPagination(LimitOffsetPagination):
-    page_size = 5
+    page_size = PAGE_SIZE
 
 
 class CommentViewSet(viewsets.ModelViewSet):
