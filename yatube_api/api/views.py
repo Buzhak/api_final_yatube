@@ -1,15 +1,20 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets , mixins, exceptions, permissions
+from rest_framework import viewsets, mixins, exceptions, permissions
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 
-from .serializers import CommentSerializer, FollowSerializer, GroupSerializer, PostSerializer
-from posts.models import Comment, Follow, Group, Post, User 
+from .serializers import (
+    CommentSerializer,
+    FollowSerializer,
+    GroupSerializer,
+    PostSerializer
+)
+from posts.models import Comment, Follow, Group, Post, User
 
 
-class PostsPagination(LimitOffsetPagination): 
-    page_size = 5 
+class PostsPagination(LimitOffsetPagination):
+    page_size = 5
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -17,7 +22,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = None
-
 
     def get_queryset(self):
         post_id = self.kwargs.get('post_id')
@@ -41,6 +45,7 @@ class CommentViewSet(viewsets.ModelViewSet):
             )
         super(CommentViewSet, self).perform_destroy(serializer)
 
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -48,10 +53,10 @@ class PostViewSet(viewsets.ModelViewSet):
     pagination_class = PostsPagination
 
     def perform_create(self, serializer):
-            serializer.save(
-                author=self.request.user,
-            )
-  
+        serializer.save(
+            author=self.request.user,
+        )
+
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
             raise exceptions.PermissionDenied(

@@ -26,7 +26,7 @@ class Post(models.Model):
         related_name='posts'
     )
     image = models.ImageField(
-        upload_to='cats/images/', 
+        upload_to='cats/images/',
         null=True,
         blank=True,
         default=None
@@ -47,8 +47,15 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user'
+    )
+    following = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='following'
+    )
 
     class Meta:
         constraints = [

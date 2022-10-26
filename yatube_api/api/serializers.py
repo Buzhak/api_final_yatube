@@ -45,6 +45,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Comment
 
+
 class FollowSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         queryset=User.objects.all(),
@@ -80,10 +81,9 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta():
         fields = '__all__'
         model = Group
-        
         validators = [
             UniqueValidator(
-                queryset = Group.objects.all(),
+                queryset=Group.objects.all(),
                 message='Поле "slug" должно быть уникальным'
             )
         ]
