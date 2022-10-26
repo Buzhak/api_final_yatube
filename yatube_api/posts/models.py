@@ -30,7 +30,7 @@ class Post(models.Model):
         null=True,
         blank=True,
         default=None
-        )
+    )
 
     def __str__(self):
         return self.text
