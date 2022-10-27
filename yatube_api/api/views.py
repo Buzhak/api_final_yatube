@@ -4,6 +4,7 @@ from rest_framework import viewsets, mixins, exceptions, permissions
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 
+from .permissions import IsAuthorOrReadOnlyPermission
 from .serializers import (
     CommentSerializer,
     FollowSerializer,
@@ -12,9 +13,9 @@ from .serializers import (
 )
 
 from posts.models import Comment, Follow, Group, Post, User
-from yatube_api.settings import PAGE_SIZE
 
 E_MESSAGE = 'Изменение чужого контента запрещено!'
+PAGE_SIZE = 5
 
 
 class PostsPagination(LimitOffsetPagination):
@@ -24,7 +25,7 @@ class PostsPagination(LimitOffsetPagination):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthorOrReadOnlyPermission,)
     pagination_class = None
 
     def get_queryset(self):
@@ -35,45 +36,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         post_id = self.kwargs.get('post_id')
         serializer.save(author=self.request.user, post_id=post_id)
 
-    def perform_update(self, serializer):
-        if serializer.instance.author != self.request.user:
-            raise exceptions.PermissionDenied(
-                'Изменение чужого контента запрещено!'
-            )
-        super(CommentViewSet, self).perform_update(serializer)
-
-    def perform_destroy(self, serializer):
-        if serializer.author != self.request.user:
-            raise exceptions.PermissionDenied(
-                'Изменение чужого контента запрещено!'
-            )
-        super(CommentViewSet, self).perform_destroy(serializer)
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthorOrReadOnlyPermission,)
     pagination_class = PostsPagination
 
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user,
         )
-
-    def perform_update(self, serializer):
-        if serializer.instance.author != self.request.user:
-            raise exceptions.PermissionDenied(
-                'Изменение чужого контента запрещено!'
-            )
-        super(PostViewSet, self).perform_update(serializer)
-
-    def perform_destroy(self, serializer):
-        if serializer.author != self.request.user:
-            raise exceptions.PermissionDenied(
-                'Изменение чужого контента запрещено!'
-            )
-        super(PostViewSet, self).perform_destroy(serializer)
 
 
 class FollowViewSet(
